@@ -53,8 +53,8 @@ message ( "DIST_DEPENDS: ${DIST_DEPENDS}")
 set ( INSTALL_BIN bin CACHE PATH "Where to install binaries to." )
 set ( INSTALL_LIB lib CACHE PATH "Where to install libraries to." )
 set ( INSTALL_INC include CACHE PATH "Where to install headers to." )
-set ( INSTALL_ETC etc CACHE PATH "Where to store configuration files" )
-set ( INSTALL_SHARE share CACHE PATH "Directory for shared data." )
+#set ( INSTALL_ETC etc CACHE PATH "Where to store configuration files" )
+#set ( INSTALL_SHARE share CACHE PATH "Directory for shared data." )
 
 # Secondary paths
 option ( INSTALL_VERSION
@@ -63,12 +63,12 @@ set ( INSTALL_DATA ${INSTALL_SHARE}/${DIST_NAME} CACHE PATH
       "Directory the package can store documentation, tests or other data in.")  
 set ( INSTALL_DOC  ${INSTALL_DATA}/doc CACHE PATH
       "Recommended directory to install documentation into.")
-set ( INSTALL_EXAMPLE ${INSTALL_DATA}/example CACHE PATH
-      "Recommended directory to install examples into.")
-set ( INSTALL_TEST ${INSTALL_DATA}/test CACHE PATH
-      "Recommended directory to install tests into.")
-set ( INSTALL_FOO  ${INSTALL_DATA}/etc CACHE PATH
-      "Where to install additional files")
+#set ( INSTALL_EXAMPLE ${INSTALL_DATA}/example CACHE PATH
+#      "Recommended directory to install examples into.")
+#set ( INSTALL_TEST ${INSTALL_DATA}/test CACHE PATH
+#      "Recommended directory to install tests into.")
+#set ( INSTALL_FOO  ${INSTALL_DATA}/etc CACHE PATH
+#      "Where to install additional files")
 
 # Tweaks and other defaults
 # Setting CMAKE to use loose block and search for find modules in source directory
