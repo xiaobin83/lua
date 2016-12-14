@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.org/xiaobin83/lua.svg?branch=master)](https://travis-ci.org/xiaobin83/lua)
 This is Lua 5.3.3, released on 30 May 2016.
 
 For installation instructions, license details, and
