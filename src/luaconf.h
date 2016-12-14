@@ -1,5 +1,5 @@
 /*
-** $Id: luaconf.h,v 1.254 2015/10/21 18:17:40 roberto Exp $
+** $Id: luaconf.h,v 1.255 2016/05/01 20:06:09 roberto Exp $
 ** Configuration file for Lua
 ** See Copyright Notice in lua.h
 */
@@ -33,7 +33,7 @@
 ** ensure that all software connected to Lua will be compiled with the
 ** same configuration.
 */
-#cmakedefine LUA_32BITS
+/* #define LUA_32BITS */
 
 
 /*
@@ -41,18 +41,36 @@
 ** Define it if you want Lua to avoid the use of a few C99 features
 ** or Windows-specific features on Windows.
 */
-#cmakedefine LUA_USE_C89
+/* #define LUA_USE_C89 */
 
 
 /*
 ** By default, Lua on Windows use (some) specific Windows features
 */
-#cmakedefine LUA_USE_WINDOWS
+#if !defined(LUA_USE_C89) && defined(_WIN32) && !defined(_WIN32_WCE)
+#define LUA_USE_WINDOWS  /* enable goodies for regular Windows */
+#endif
 
-#cmakedefine LUA_DL_DLL
-#cmakedefine LUA_USE_POSIX
-#cmakedefine LUA_USE_DLOPEN		/* needs an extra library: -ldl */
-#cmakedefine LUA_USE_READLINE	/* needs some extra libraries */
+
+#if defined(LUA_USE_WINDOWS)
+#define LUA_DL_DLL	/* enable support for DLL */
+#define LUA_USE_C89	/* broadly, Windows is C89 */
+#endif
+
+
+#if defined(LUA_USE_LINUX)
+#define LUA_USE_POSIX
+#define LUA_USE_DLOPEN		/* needs an extra library: -ldl */
+#define LUA_USE_READLINE	/* needs some extra libraries */
+#endif
+
+
+#if defined(LUA_USE_MACOSX)
+#define LUA_USE_POSIX
+#define LUA_USE_DLOPEN		/* MacOS does not need -ldl */
+#define LUA_USE_READLINE	/* needs an extra library: -lreadline */
+#endif
+
 
 /*
 @@ LUA_C89_NUMBERS ensures that Lua uses the largest types available for
@@ -149,20 +167,49 @@
 ** hierarchy or if you want to install your libraries in
 ** non-conventional directories.
 */
-#cmakedefine LUA_MODULE_SUFFIX "@LUA_MODULE_SUFFIX@"
-#cmakedefine LUA_DIR	"@LUA_DIR@"
-#cmakedefine LUA_LDIR	"@LUA_LDIR@"
-#cmakedefine LUA_CDIR	"@LUA_CDIR@"
+#define LUA_VDIR	LUA_VERSION_MAJOR "." LUA_VERSION_MINOR
+#if defined(_WIN32)	/* { */
+/*
+** In Windows, any exclamation mark ('!') in the path is replaced by the
+** path of the directory of the executable file of the current process.
+*/
+#define LUA_LDIR	"!\\lua\\"
+#define LUA_CDIR	"!\\"
+#define LUA_SHRDIR	"!\\..\\share\\lua\\" LUA_VDIR "\\"
+#define LUA_PATH_DEFAULT  \
+		LUA_LDIR"?.lua;"  LUA_LDIR"?\\init.lua;" \
+		LUA_CDIR"?.lua;"  LUA_CDIR"?\\init.lua;" \
+		LUA_SHRDIR"?.lua;" LUA_SHRDIR"?\\init.lua;" \
+		".\\?.lua;" ".\\?\\init.lua"
+#define LUA_CPATH_DEFAULT \
+		LUA_CDIR"?.dll;" \
+		LUA_CDIR"..\\lib\\lua\\" LUA_VDIR "\\?.dll;" \
+		LUA_CDIR"loadall.dll;" ".\\?.dll"
 
-#define LUA_PATH_DEFAULT "@LUA_PATH_DEFAULT@"
-#define LUA_CPATH_DEFAULT "@LUA_CPATH_DEFAULT@"
+#else			/* }{ */
+
+#define LUA_ROOT	"/usr/local/"
+#define LUA_LDIR	LUA_ROOT "share/lua/" LUA_VDIR "/"
+#define LUA_CDIR	LUA_ROOT "lib/lua/" LUA_VDIR "/"
+#define LUA_PATH_DEFAULT  \
+		LUA_LDIR"?.lua;"  LUA_LDIR"?/init.lua;" \
+		LUA_CDIR"?.lua;"  LUA_CDIR"?/init.lua;" \
+		"./?.lua;" "./?/init.lua"
+#define LUA_CPATH_DEFAULT \
+		LUA_CDIR"?.so;" LUA_CDIR"loadall.so;" "./?.so"
+#endif			/* } */
+
 
 /*
 @@ LUA_DIRSEP is the directory separator (for submodules).
 ** CHANGE it if your machine does not use "/" as the directory separator
 ** and is not Windows. (On Windows Lua automatically uses "\".)
 */
-#cmakedefine LUA_DIRSEP	"@LUA_DIRSEP@"
+#if defined(_WIN32)
+#define LUA_DIRSEP	"\\"
+#else
+#define LUA_DIRSEP	"/"
+#endif
 
 /* }================================================================== */
 
@@ -241,9 +288,6 @@
 ** You can define it to get all options, or change specific options
 ** to fit your specific needs.
 */
-#cmakedefine LUA_COMPAT_5_2
-#cmakedefine LUA_COMPAT_5_1
-
 #if defined(LUA_COMPAT_5_2)	/* { */
 
 /*
@@ -562,13 +606,13 @@
 
 
 /*
-@@ lua_number2strx converts a float to an hexadecimal numeric string.
+@@ lua_number2strx converts a float to an hexadecimal numeric string. 
 ** In C99, 'sprintf' (with format specifiers '%a'/'%A') does that.
 ** Otherwise, you can leave 'lua_number2strx' undefined and Lua will
 ** provide its own implementation.
 */
 #if !defined(LUA_USE_C89)
-#define lua_number2strx(L,b,sz,f,n)	l_sprintf(b,sz,f,n)
+#define lua_number2strx(L,b,sz,f,n)	((void)L, l_sprintf(b,sz,f,n))
 #endif
 
 
