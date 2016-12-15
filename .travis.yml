@@ -42,10 +42,9 @@ branches:
   only:
     - lua-5.3
 
-# Notify the LuaDist Dev group if needed
-#notifications:
-#  recipients:
-#    - luadist-dev@googlegroups.com
-#  email:
-#    on_success: change
-#    on_failure: always
+notifications:
+  recipients:
+    - xiaobin.huang@gmail.com
+  email:
+    on_success: change
+    on_failure: always
