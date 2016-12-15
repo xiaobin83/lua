@@ -97,8 +97,8 @@ set ( SRC_CORE src/lapi.c src/lcode.c src/lctype.c src/ldebug.c src/ldo.c src/ld
   src/lfunc.c src/lgc.c src/llex.c src/lmem.c src/lobject.c src/lopcodes.c src/lparser.c
   src/lstate.c src/lstring.c src/ltable.c src/ltm.c src/lundump.c src/lvm.c src/lzio.c )
 set ( SRC_LIB src/lauxlib.c src/lbaselib.c src/lbitlib.c src/lcorolib.c src/ldblib.c
-  src/liolib.c src/lmathlib.c src/loslib.c src/lstrlib.c src/ltablib.c src/linit.c
-  src/lutf8lib.c )
+  src/liolib.c src/lmathlib.c src/loslib.c src/lstrlib.c src/ltablib.c src/lutf8lib.c 
+  src/linit.c )
 set ( SRC_LUA src/lua.c )
 set ( SRC_LUAC src/luac.c )
 
@@ -134,8 +134,7 @@ endif ( )
 install_executable ( lua luac )
 install_library ( liblua )
 install_data ( README.md )
-#install_lua_module ( strict etc/strict.lua )
 install_header ( src/lua.h src/lualib.h src/lauxlib.h src/lua.hpp ${CMAKE_CURRENT_BINARY_DIR}/luaconf.h )
 install_doc ( doc/ )
-#install_foo ( etc/ )
-#install_test ( test/ )
+install_foo ( etc/ )
+
