@@ -47,6 +47,23 @@ endif ()
 message ( "DIST_DEPENDS: ${DIST_DEPENDS}")
 ## 2DO: Parse DIST_DEPENDS and try to install Dependencies with automatically using externalproject_add
 
+## Setup V and R
+string ( REGEX MATCH "^([0-9]+)\\.([0-9]+)(\\.([0-9]+))?$" VERSION_MATCHED "${DIST_VERSION}" )
+if ( VERSION_MATCHED )
+  set ( V "${CMAKE_MATCH_1}.${CMAKE_MATCH_2}" )
+  string (LENGTH "${CMAKE_MATCH_4}" LENGTH_R )
+  if ( ${LENGTH_R} GREATER 0 )
+    set ( R "${V}.${CMAKE_MATCH_4}")
+  else ()
+    set ( R "${V}")
+  endif ()
+  message ( STATUS "V = ${V}" )
+  message ( STATUS "R = ${R}" )
+else ()
+  message ( FATAL "Incorrect version = \"${DIST_VERSION}\" in dist.info ")
+endif ()
+
+
 
 ## INSTALL DEFAULTS (Relative to CMAKE_INSTALL_PREFIX)
 # Primary paths
@@ -55,6 +72,7 @@ set ( INSTALL_BIN ${INSTALL_TOP}/bin CACHE PATH "Where to install binaries to." 
 set ( INSTALL_INC ${INSTALL_TOP}/include CACHE PATH "Where to install headers to." )
 set ( INSTALL_LIB ${INSTALL_TOP}/lib CACHE PATH "Where to install libraries to." )
 set ( INSTALL_SHARE ${INSTALL_TOP}/share CACHE PATH "Directory for shared data." )
+
 # Secondary paths
 option ( INSTALL_VERSION
       "Install runtime libraries and executables with version information." OFF)

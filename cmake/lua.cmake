@@ -6,9 +6,12 @@
 # For details see the COPYRIGHT file distributed with LuaDist.
 # Please note that the package source code is licensed under its own license.
 
-set ( INSTALL_LMOD ${INSTALL_TOP}/share/lua 
+include ( dist.cmake )
+
+
+set ( INSTALL_LMOD ${INSTALL_TOP}/share/lua/${V}
       CACHE PATH "Directory to install Lua modules." )
-set ( INSTALL_CMOD ${INSTALL_TOP}/lib/lua
+set ( INSTALL_CMOD ${INSTALL_TOP}/lib/lua/${V}
       CACHE PATH "Directory to install Lua binary modules." )
  
 option ( SKIP_LUA_WRAPPER
