@@ -1,6 +1,6 @@
 [submodule "cmake/ios"]
 	path = cmake/ios
-	url = git@github.com:xiaobin83/ios-cmake.git
+	url = https//github.com/xiaobin83/ios-cmake.git
 [submodule "cmake/android"]
 	path = cmake/android
-	url = git@github.com:xiaobin83/android-cmake.git
+	url = https://github.com/xiaobin83/android-cmake.git
