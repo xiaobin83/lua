@@ -11,6 +11,10 @@
 #include <limits.h>
 #include <stddef.h>
 
+#cmakedefine LUA_USE_LINUX
+#cmakedefine LUA_USE_WINDOWS
+#cmakedefine LUA_USE_MACOSX
+#cmakedefine LUA_USE_ANDROID
 
 /*
 ** ===================================================================
@@ -43,12 +47,9 @@
 */
 #cmakedefine LUA_USE_C89
 
-
 /*
 ** By default, Lua on Windows use (some) specific Windows features
 */
-#cmakedefine LUA_USE_WINDOWS
-
 #if !defined(LUA_USE_C89) && defined(_WIN32) && !defined(_WIN32_WCE)
  #if !defined(LUA_USE_WINDOWS)
   #define LUA_USE_WINDOWS  /* enable goodies for regular Windows */
@@ -57,11 +58,15 @@
 
 
 #if defined(LUA_USE_WINDOWS)
-#define LUA_DL_DLL	/* enable support for DLL */
-#define LUA_USE_C89	/* broadly, Windows is C89 */
+  #define LUA_DL_DLL	/* enable support for DLL */
+  #define LUA_USE_C89	/* broadly, Windows is C89 */
 #endif
 
-#cmakedefine LUA_USE_LINUX
+#if defined(LUA_USE_ANDROID)
+  #define LUA_USE_C89
+#endif
+
+
 
 #if defined(LUA_USE_LINUX)
 #define LUA_USE_POSIX
@@ -69,7 +74,7 @@
 #define LUA_USE_READLINE	/* needs some extra libraries */
 #endif
 
-#cmakedefine LUA_USE_MACOSX
+
 
 #if defined(LUA_USE_MACOSX)
 #define LUA_USE_POSIX
@@ -165,16 +170,6 @@
 */
 
 
-#cmakedefine LUADIST_USE_SPECIFIC_LUA_PATH_AND_CPATH
-
-#if defined LUADIST_USE_SPECIFIC_LUA_PATH_AND_CPATH
-
-#cmakedefine LUA_PATH_DEFAULT "@LUA_PATH_DEFAULT@"
-#cmakedefine LUA_CPATH_DEFAULT "@LUA_CPATH_DEFAULT@"
-
-
-#else /* if not LUADIST_USE_SPECIFIC_LUA_PATH_AND_CPATH */
-
 
 /*
 @@ LUA_PATH_DEFAULT is the default path that Lua uses to look for
@@ -217,7 +212,6 @@
 		LUA_CDIR"?.so;" LUA_CDIR"loadall.so;" "./?.so"
 #endif			/* } */
 
-#endif /* LUADIST_USE_SPECIFIC_LUA_PATH_AND_CPATH */
 
 
 /*
@@ -677,7 +671,11 @@
 ** macro must include header 'locale.h'.)
 */
 #if !defined(lua_getlocaledecpoint)
-#define lua_getlocaledecpoint()		(localeconv()->decimal_point[0])
+  #ifdef LUA_USE_ANDROID
+    #define lua_getlocaledecpoint() ('.')
+  #else
+    #define lua_getlocaledecpoint()		(localeconv()->decimal_point[0])
+  #endif
 #endif
 
 /* }================================================================== */
