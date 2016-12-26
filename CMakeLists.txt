@@ -86,9 +86,11 @@ set ( SRC_LIB src/lauxlib.c src/lbaselib.c src/lbitlib.c src/lcorolib.c src/ldbl
 set ( SRC_LUA src/lua.c )
 set ( SRC_LUAC src/luac.c )
 
+set ( SRC_EXTRA extra/lconst.c )
+
 ## BUILD
 # Create lua library
-add_library ( liblua ${SRC_CORE} ${SRC_LIB} ${LUA_DLL_RC} )
+add_library ( liblua ${SRC_CORE} ${SRC_LIB} ${LUA_DLL_RC} ${SRC_EXTRA} )
 target_link_libraries ( liblua ${LIBS} )
 set_target_properties ( liblua PROPERTIES OUTPUT_NAME lua CLEAN_DIRECT_OUTPUT 1 )
 if ( LUA_BUILD_AS_DLL )
