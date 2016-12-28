@@ -19,6 +19,7 @@ include ( cmake/dist.cmake )
 
 
 option ( LUA_USE_C89 "Use only C89 features." OFF )
+option ( LUA_32BITS "Use 32-bit integer and float." OFF )
 option ( LUA_COMPAT_5_1 "Enable backwards compatibility options with lua-5.1." ON )
 option ( LUA_COMPAT_5_2 "Enable backwards compatibility options with lua-5.2." ON )
 
