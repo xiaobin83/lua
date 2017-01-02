@@ -16,6 +16,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
+#include <io.h>
 
 #include "lua.h"
 
@@ -637,6 +639,24 @@ static int io_write (lua_State *L) {
   return g_write(L, getiofile(L, IO_OUTPUT), 1);
 }
 
+static int io_setmode(lua_State* L) {
+	void* ud = luaL_checkudata(L, 1, LUA_FILEHANDLE);
+	int mode = luaL_checkint(L, 2);
+	luaL_argcheck(L, mode == _O_BINARY || mode == _O_TEXT, 2, 
+		"neither io._O_BINARY nor io._O_TEXT provided");
+	LStream* s = (LStream*)ud;
+	_setmode(_fileno(s->f), mode);
+	return 0;
+}
+
+static int io_setbuf(lua_State* L) {
+	void* ud = luaL_checkudata(L, 1, LUA_FILEHANDLE);
+	void* buf = lua_touserdata(L, 1);
+	LStream* s = (LStream*)ud;
+	setbuf(s->f, (char*)buf);
+	return 0;
+}
+
 
 static int f_write (lua_State *L) {
   FILE *f = tofile(L);
@@ -701,6 +721,8 @@ static const luaL_Reg iolib[] = {
   {"tmpfile", io_tmpfile},
   {"type", io_type},
   {"write", io_write},
+  {"_setmode", io_setmode},
+  {"_setbuf", io_setbuf},
   {NULL, NULL}
 };
 
@@ -763,6 +785,14 @@ LUAMOD_API int luaopen_io (lua_State *L) {
   createstdfile(L, stdin, IO_INPUT, "stdin");
   createstdfile(L, stdout, IO_OUTPUT, "stdout");
   createstdfile(L, stderr, NULL, "stderr");
+
+  /* mode */
+  lua_pushinteger(L, _O_BINARY);
+  lua_setfield(L, -2, "_O_BINARY");
+
+  lua_pushinteger(L, _O_TEXT);
+  lua_setfield(L, -2, "_O_TEXT");
+
   return 1;
 }
 
