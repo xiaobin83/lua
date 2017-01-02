@@ -85,12 +85,23 @@ set ( SRC_LIB src/lauxlib.c src/lbaselib.c src/lbitlib.c src/lcorolib.c src/ldbl
   src/liolib.c src/lmathlib.c src/loslib.c src/lstrlib.c src/ltablib.c src/lutf8lib.c 
   src/linit.c src/loadlib.c)
 set ( SRC_LUA src/lua.c )
-set ( SRC_LUAC src/luac.c )
+set ( SRC_LUAC src/luac.c src/ldump.c src/lopcodes.c )
 
-set ( SRC_EXTRA extra/lconst.c )
+# extra lconst
+set ( SRC_EXTRA_LCONST extra/lconst.c )
+
+# extra lpeg
+file (GLOB SRC_EXTRA_LPEG extra/lpeg/*.h extra/lpeg/*.c)
+
+
+set ( SRC_EXTRA ${SRC_EXTRA_LCONST} ${SRC_EXTRA_LPEG} )
 
 ## BUILD
 # Create lua library
+source_group ( "extra" FILES ${SRC_EXTRA_LCONST} )
+source_group ( "extra\\lpeg" FILES ${SRC_EXTRA_LPEG} )
+
+
 add_library ( liblua ${SRC_CORE} ${SRC_LIB} ${LUA_DLL_RC} ${SRC_EXTRA} )
 target_link_libraries ( liblua ${LIBS} )
 if ( LUA_BUILD_AS_DLL )
@@ -101,8 +112,8 @@ endif ()
 add_executable ( lua ${SRC_LUA} src/lua.rc )
 target_link_libraries ( lua liblua )
 
-add_executable ( luac ${SRC_CORE} ${SRC_LIB} ${SRC_LUAC} src/luac.rc )
-target_link_libraries ( luac ${LIBS} )
+add_executable ( luac ${SRC_LUAC} src/luac.rc )
+target_link_libraries ( luac liblua )
 
 # On windows a variant of the lua interpreter without console output needs to be built
 if ( LUA_BUILD_WLUA )
