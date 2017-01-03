@@ -646,7 +646,7 @@ static int io_write (lua_State *L) {
 static int io_setmode(lua_State* L) {
 	void* ud = luaL_checkudata(L, 1, LUA_FILEHANDLE);
 	int mode = luaL_checkint(L, 2);
-	luaL_argcheck(L, mode == _O_BINARY || mode == a, 2, 
+	luaL_argcheck(L, mode == _O_BINARY || mode == _O_TEXT, 2, 
 		"neither io._O_BINARY nor io._O_TEXT provided");
 	LStream* s = (LStream*)ud;
 	_setmode(_fileno(s->f), mode);
