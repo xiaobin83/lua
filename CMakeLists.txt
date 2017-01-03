@@ -104,6 +104,7 @@ source_group ( "extra\\lpeg" FILES ${SRC_EXTRA_LPEG} )
 
 add_library ( liblua ${SRC_CORE} ${SRC_LIB} ${LUA_DLL_RC} ${SRC_EXTRA} )
 target_link_libraries ( liblua ${LIBS} )
+set_target_properties ( liblua PROPERTIES OUTPUT_NAME lua CLEAN_DIRECT_OUTPUT 1 )
 if ( LUA_BUILD_AS_DLL )
   set_target_properties ( liblua PROPERTIES COMPILE_DEFINITIONS LUA_BUILD_AS_DLL )
 endif ()
