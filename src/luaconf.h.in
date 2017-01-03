@@ -63,9 +63,11 @@
   #define LUA_USE_C89	/* broadly, Windows is C89 */
 #endif
 
+
 #if defined(LUA_USE_ANDROID)
-  #define LUA_USE_C89
+  #define log2(x) (log(x) / 0.6931471805599453)
 #endif
+
 
 
 
